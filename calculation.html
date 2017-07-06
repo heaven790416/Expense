@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>EZoApp</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob: filesystem:">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/2.1.2/normalize.min.css">
+  <link rel="stylesheet" href="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+    $(document).on("mobileinit", function () {
+      $.mobile.autoInitializePage = false;
+      $.mobile.hashListeningEnabled = false;
+    });
+
+    function mobileInitPage() {
+      $.mobile.hashListeningEnabled = true;
+      $.mobile.initializePage();
+    }
+  </script>
+  <script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  <!-- Uncomment the following to include cordova in your app project -->
+  <!-- <script src="//ezoui.com/platforms/android_or_ios/cordova.js"></script> -->
+  <!-- GK Loader use RequireJS to load module -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.16/require.min.js"></script>
+  <!--Plug in GK-->
+  <script src="//ezoui.com/components/jquery.gk/jquery.gk.min.js"></script>
+  <!-- Load GK components -->
+  <script components="//ezoui.com/components/gk-ext/gk-text.html" callback="mobileInitPage" src="//ezoui.com/components/gk-loader/gk-loader.min.js"></script>
+  <!-- Export JS  -->
+  <script>
+    // 週一到六上午大人Ï 6.29小孩 3.99
+     // 週一到四晚上大人 8.99小孩 4.99
+     // 週五六晚上週日整天大人 10.99小孩 4.99
+     // 飲料 1.79
+
+    var week = 0; //星期
+    var adultPrice = 0; //大人
+    var childPrice = 0; //小孩
+    var drinkPrice = 1.79; //飲料
+    var adultCount = 0;
+    var childCount = 0;
+    var drinkCount = 0;
+    var time; //時段
+    var total = 0;
+    var tax = 0.0975;
+    var serviceTax = 0;
+    var countPrice = 0;
+
+
+    function equal() {
+      var d = new Date();
+      week = d.getDay();
+      result();
+    }
+
+    function result() {
+      getRadioVal(); //時段
+      priceByTimes(); //金額
+      count(); //人數
+      total = adultPrice * adultCount + childPrice * childCount + drinkPrice * drinkCount;
+      countPrice = total;
+      serviceTax = total * tax;
+      total = total + serviceTax;
+      document.getElementById("result").innerHTML = '金額：' + (countPrice) + '\n' + 'TAX:' + serviceTax + '\n' + '總金額：' + total;
+      if (time === undefined) {
+        document.getElementById("result").innerHTML = "請選時段";
+      }
+
+      window.alert(time + "/" + adultPrice + "/" + adultCount + "/" + childPrice + "/" + childCount + "/" + drinkPrice + "/" + drinkCount + "/" + tax);
+    }
+
+    function count() {
+      adultCount = parseInt(document.getElementById("adultCount").value) || 0;
+      childCount = parseInt(document.getElementById("childCount").value) || 0;
+      drinkCount = parseInt(document.getElementById("drinkCount").value) || 0;
+    }
+
+    function getRadioVal() {
+      if (document.getElementById('pmRadio').checked) {
+        time = document.getElementById('pmRadio').value;
+      } else if (document.getElementById('amRadio').checked) {
+        time = document.getElementById('amRadio').value;
+      }
+    }
+
+    function Clear(num) {
+      if (num == 1) {
+        document.getElementById("adultCount").value = "";
+      } else if (num == 2) {
+        document.getElementById("childCount").value = "";
+      } else if (num == 3) {
+        document.getElementById("drinkCount").value = "";
+      }
+
+    }
+
+
+
+    function priceByTimes() {
+      //週一到六上午 
+      if (week > 0 && time == 0) {
+        adultPrice = 6.29;
+        childPrice = 3.99;
+      }
+      //週一到四晚上
+      else if (week > 0 && week < 4 && time == 1) {
+        adultPrice = 8.99;
+        childPrice = 4.99;
+      }
+      //週五六晚上
+      else if (week > 4 && time == 1) {
+        adultPrice = 10.99;
+        childPrice = 4.99;
+      }
+      //週日整天
+      else if (week == 0) {
+        adultPrice = 10.99;
+        childPrice = 4.99;
+      }
+
+
+
+    }
+  </script>
+</head>
+
+<body>
+  <!-- Page: home  -->
+  <div id="home" data-role="page">
+    <div role="main" class="ui-content">
+      <fieldset data-role="controlgroup" data-type="vertical">
+        <legend>時段:</legend>
+        <input id="pmRadio" name="timeRadio" type="radio" value="0">
+        <label for="pmRadio">上午</label>
+        <input id="amRadio" name="timeRadio" type="radio" value="1">
+        <label for="amRadio">晚上</label>
+      </fieldset>
+      <div class="ui-field-contain">
+        <label for="gk-73R2JX">大人</label>
+        <input type="number" name id="adultCount" value="0" onclick="Clear(1)">
+      </div>
+      <div class="ui-field-contain">
+        <label for="gk-73QlVR">小孩</label>
+        <input type="number" name id="childCount" value="0" onclick="Clear(2)">
+      </div>
+      <div class="ui-field-contain">
+        <label for="gk-731A4i">飲料</label>
+        <input type="number" name id="drinkCount" value="0" onclick="Clear(3)">
+      </div>
+      <a class="ui-btn" id="totalBtn" onclick="equal()">總金額</a>
+      <h1 is="gk-text" id="result">總計：</h1> 
+    </div>
+  </div>
+</body>
+
+</html>
+
