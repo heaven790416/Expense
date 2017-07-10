@@ -64,7 +64,7 @@
       countPrice = total;
       serviceTax = total * tax;
       total = total + serviceTax;
-      document.getElementById("result").innerHTML = '金額：' + (countPrice) + '\n' + 'TAX:' + serviceTax + '\n' + '總金額：' + total;
+      document.getElementById("result").innerHTML = '金額：' + (countPrice) + '\n' + 'TAX:' + serviceTax + '\n' + '總金額：' + total.toFixed(2);
       if (time === undefined) {
         document.getElementById("result").innerHTML = "請選時段";
       }
