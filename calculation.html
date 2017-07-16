@@ -48,6 +48,9 @@
     var tax = 0.0975;
     var serviceTax = 0;
     var countPrice = 0;
+    var adult = 0;
+    var child = 0;
+    var drinks = 0;
 
 
     function equal() {
@@ -64,12 +67,17 @@
       countPrice = total;
       serviceTax = total * tax;
       total = total + serviceTax;
-      document.getElementById("result").innerHTML = '總金額：' +  total.toFixed(2) 
-  + '<br>'+'(金額：' + (countPrice) +'<br>'+'TAX:' + serviceTax +")";if (time === undefined) {
+      adult = (adultPrice * adultCount).toFixed(2);
+      child = (childPrice * childCount).toFixed(2);
+      drinks = (drinkPrice * drinkCount).toFixed(2);
+      document.getElementById("result").innerHTML =
+        adultCount + 'BF:' + adult + '<br>' + childCount + 'Kid：' + child + '<br>' + drinkCount + 'DR：' + drinks + '<br>' + '金額：' + countPrice + '<br>' + 'TAX:' + serviceTax.toFixed(2) + '<br>' + '總金額：' + total.toFixed(2);
+
+      if (time === undefined) {
         document.getElementById("result").innerHTML = "請選時段";
       }
 
-      window.alert(time + "/" + adultPrice + "/" + adultCount + "/" + childPrice + "/" + childCount + "/" + drinkPrice + "/" + drinkCount + "/" + tax);
+      // window.alert(time + "/" + adultPrice + "/" + adultCount + "/" + childPrice + "/" + childCount + "/" + drinkPrice + "/" + drinkCount + "/" + tax);
     }
 
     function count() {
@@ -98,7 +106,6 @@
     }
 
 
-
     function priceByTimes() {
       //週一到六上午 
       if (week > 0 && time == 0) {
@@ -120,6 +127,8 @@
         adultPrice = 10.99;
         childPrice = 4.99;
       }
+
+
 
 
 
